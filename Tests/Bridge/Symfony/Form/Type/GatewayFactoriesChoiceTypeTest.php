@@ -1,17 +1,17 @@
 <?php
 namespace Payum\Core\Tests\Bridge\Symfony\Form\Type;
 
-use Payum\Core\Bridge\Symfony\Form\Type\PaymentFactoriesChoiceType;
+use Payum\Core\Bridge\Symfony\Form\Type\GatewayFactoriesChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PaymentFactoriesChoiceTypeTest extends \PHPUnit_Framework_TestCase
+class GatewayFactoriesChoiceTypeTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
      */
     public function shouldBeSubClassOfAbstractType()
     {
-        $rc = new \ReflectionClass('Payum\Core\Bridge\Symfony\Form\Type\PaymentFactoriesChoiceType');
+        $rc = new \ReflectionClass('Payum\Core\Bridge\Symfony\Form\Type\GatewayFactoriesChoiceType');
 
         $this->assertTrue($rc->isSubclassOf('Symfony\Component\Form\AbstractType'));
     }
@@ -21,7 +21,7 @@ class PaymentFactoriesChoiceTypeTest extends \PHPUnit_Framework_TestCase
      */
     public function couldBeConstructedWithDefaultFactoriesAsFirstArgument()
     {
-        new PaymentFactoriesChoiceType(array('foo' => 'Foo Factory'));
+        new GatewayFactoriesChoiceType(array('foo' => 'Foo Factory'));
     }
 
     /**
@@ -29,7 +29,7 @@ class PaymentFactoriesChoiceTypeTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldExtendChoice()
     {
-        $type = new PaymentFactoriesChoiceType(array());
+        $type = new GatewayFactoriesChoiceType(array());
 
         $this->assertEquals('choice', $type->getParent());
     }
@@ -39,9 +39,9 @@ class PaymentFactoriesChoiceTypeTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldReturnExpectedName()
     {
-        $type = new PaymentFactoriesChoiceType(array());
+        $type = new GatewayFactoriesChoiceType(array());
 
-        $this->assertEquals('payum_payment_factories_choice', $type->getName());
+        $this->assertEquals('payum_gateway_factories_choice', $type->getName());
     }
 
     /**
@@ -54,7 +54,7 @@ class PaymentFactoriesChoiceTypeTest extends \PHPUnit_Framework_TestCase
             'bar' => 'Bar Factory',
         );
 
-        $type = new PaymentFactoriesChoiceType($expectedChoices);
+        $type = new GatewayFactoriesChoiceType($expectedChoices);
 
         $resolver = new OptionsResolver();
 

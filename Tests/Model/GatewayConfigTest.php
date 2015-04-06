@@ -1,18 +1,18 @@
 <?php
 namespace Payum\Core\Tests\Model;
 
-use Payum\Core\Model\PaymentConfig;
+use Payum\Core\Model\GatewayConfig;
 
-class PaymentConfigTest extends \PHPUnit_Framework_TestCase
+class GatewayConfigTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
      */
     public function shouldExtendDetailsAwareInterface()
     {
-        $rc = new \ReflectionClass('Payum\Core\Model\PaymentConfig');
+        $rc = new \ReflectionClass('Payum\Core\Model\GatewayConfig');
 
-        $this->assertTrue($rc->implementsInterface('Payum\Core\Model\PaymentConfigInterface'));
+        $this->assertTrue($rc->implementsInterface('Payum\Core\Model\GatewayConfigInterface'));
     }
 
     /**
@@ -20,7 +20,7 @@ class PaymentConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function couldBeConstructedWithoutAnyArguments()
     {
-        new PaymentConfig();
+        new GatewayConfig();
     }
 
     /**
@@ -28,7 +28,7 @@ class PaymentConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldAllowGetPreviouslySetFactoryName()
     {
-        $config = new PaymentConfig();
+        $config = new GatewayConfig();
 
         $config->setFactoryName('theName');
 
@@ -38,13 +38,13 @@ class PaymentConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldAllowGetPreviouslySetPaymentName()
+    public function shouldAllowGetPreviouslySetGatewayName()
     {
-        $config = new PaymentConfig();
+        $config = new GatewayConfig();
 
-        $config->setPaymentName('theName');
+        $config->setGatewayName('theName');
 
-        $this->assertEquals('theName', $config->getPaymentName());
+        $this->assertEquals('theName', $config->getGatewayName());
     }
 
     /**
@@ -52,7 +52,7 @@ class PaymentConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldAllowGetDefaultConfigSetInConstructor()
     {
-        $config = new PaymentConfig();
+        $config = new GatewayConfig();
 
         $this->assertEquals(array(), $config->getConfig());
     }
@@ -62,7 +62,7 @@ class PaymentConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldAllowGetPreviouslySetConfig()
     {
-        $config = new PaymentConfig();
+        $config = new GatewayConfig();
 
         $config->setConfig(array('foo' => 'fooVal'));
 
