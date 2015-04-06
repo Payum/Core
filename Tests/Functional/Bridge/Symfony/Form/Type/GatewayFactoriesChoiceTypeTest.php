@@ -1,12 +1,12 @@
 <?php
 namespace Payum\Core\Tests\Functional\Bridge\Symfony\Form\Type;
 
-use Payum\Core\Bridge\Symfony\Form\Type\PaymentFactoriesChoiceType;
+use Payum\Core\Bridge\Symfony\Form\Type\GatewayFactoriesChoiceType;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PaymentFactoriesChoiceTypeTest extends \PHPUnit_Framework_TestCase
+class GatewayFactoriesChoiceTypeTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var  FormFactory
@@ -16,7 +16,7 @@ class PaymentFactoriesChoiceTypeTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->formFactory = Forms::createFormFactoryBuilder()
-            ->addType(new PaymentFactoriesChoiceType(array(
+            ->addType(new GatewayFactoriesChoiceType(array(
                 'foo' => 'Foo Factory',
                 'bar' => 'Bar Factory'
             )))
@@ -29,7 +29,7 @@ class PaymentFactoriesChoiceTypeTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldBeConstructedByFormFactory()
     {
-        $form = $this->formFactory->create('payum_payment_factories_choice');
+        $form = $this->formFactory->create('payum_gateway_factories_choice');
 
         $this->assertInstanceOf('Symfony\Component\Form\Form', $form);
         $this->assertInstanceOf('Symfony\Component\Form\FormView', $form->createView());
@@ -40,7 +40,7 @@ class PaymentFactoriesChoiceTypeTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldCorrectlyBindValidValue()
     {
-        $form = $this->formFactory->create('payum_payment_factories_choice');
+        $form = $this->formFactory->create('payum_gateway_factories_choice');
 
         $form->submit('foo');
 
@@ -54,7 +54,7 @@ class PaymentFactoriesChoiceTypeTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldNotBindInvalidValue()
     {
-        $form = $this->formFactory->create('payum_payment_factories_choice');
+        $form = $this->formFactory->create('payum_gateway_factories_choice');
 
         $form->submit('invalid');
 

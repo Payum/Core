@@ -1,7 +1,7 @@
 <?php
 namespace Payum\Core\Bridge\Symfony\Form\Type;
 
-use Payum\Core\Registry\PaymentFactoryRegistryInterface;
+use Payum\Core\Registry\GatewayFactoryRegistryInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -9,17 +9,17 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
-class PaymentConfigType extends AbstractType
+class GatewayConfigType extends AbstractType
 {
     /**
-     * @var PaymentFactoryRegistryInterface
+     * @var GatewayFactoryRegistryInterface
      */
     private $registry;
 
     /**
-     * @param PaymentFactoryRegistryInterface $registry
+     * @param GatewayFactoryRegistryInterface $registry
      */
-    public function __construct(PaymentFactoryRegistryInterface $registry)
+    public function __construct(GatewayFactoryRegistryInterface $registry)
     {
         $this->registry = $registry;
     }
@@ -30,8 +30,8 @@ class PaymentConfigType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('paymentName')
-            ->add('factoryName', 'payum_payment_factories_choice')
+            ->add('gatewayName')
+            ->add('factoryName', 'payum_gateway_factories_choice')
         ;
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'buildCredentials'));
@@ -60,8 +60,8 @@ class PaymentConfigType extends AbstractType
         $form->add('config', 'form');
         $configForm = $form->get('config');
 
-        $paymentFactory = $this->registry->getPaymentFactory($factoryName);
-        $config = $paymentFactory->createConfig();
+        $gatewayFactory = $this->registry->getGatewayFactory($factoryName);
+        $config = $gatewayFactory->createConfig();
         foreach ($config['payum.default_options'] as $name => $value) {
             $isRequired = in_array($name, $config['payum.required_options']);
             $configForm->add($name, is_bool($value) ? 'checkbox' : 'text', array(
@@ -77,7 +77,7 @@ class PaymentConfigType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Payum\Core\Model\PaymentConfig'
+            'data_class' => 'Payum\Core\Model\GatewayConfig'
         ));
     }
 
@@ -86,6 +86,6 @@ class PaymentConfigType extends AbstractType
      */
     public function getName()
     {
-        return 'payum_payment_config';
+        return 'payum_gateway_config';
     }
 }

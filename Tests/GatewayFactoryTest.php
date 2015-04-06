@@ -2,18 +2,18 @@
 namespace Payum\Core\Tests;
 
 use Payum\Core\Bridge\Spl\ArrayObject;
-use Payum\Core\PaymentFactory;
+use Payum\Core\GatewayFactory;
 
-class PaymentFactoryTest extends \PHPUnit_Framework_TestCase
+class GatewayFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
      */
-    public function shouldImplementPaymentFactoryInterface()
+    public function shouldImplementGatewayFactoryInterface()
     {
-        $rc = new \ReflectionClass('Payum\Core\PaymentFactory');
+        $rc = new \ReflectionClass('Payum\Core\GatewayFactory');
 
-        $this->assertTrue($rc->implementsInterface('Payum\Core\PaymentFactoryInterface'));
+        $this->assertTrue($rc->implementsInterface('Payum\Core\GatewayFactoryInterface'));
     }
 
     /**
@@ -21,49 +21,49 @@ class PaymentFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function couldBeConstructedWithoutAnyArguments()
     {
-        new PaymentFactory();
+        new GatewayFactory();
     }
 
     /**
      * @test
      */
-    public function shouldAllowCreatePaymentWithoutAnyOptions()
+    public function shouldAllowCreateGatewayWithoutAnyOptions()
     {
-        $factory = new PaymentFactory();
+        $factory = new GatewayFactory();
 
-        $payment = $factory->create(array());
+        $gateway = $factory->create(array());
 
-        $this->assertInstanceOf('Payum\Core\Payment', $payment);
+        $this->assertInstanceOf('Payum\Core\Gateway', $gateway);
 
-        $this->assertAttributeEmpty('apis', $payment);
-        $this->assertAttributeNotEmpty('actions', $payment);
+        $this->assertAttributeEmpty('apis', $gateway);
+        $this->assertAttributeNotEmpty('actions', $gateway);
 
-        $extensions = $this->readAttribute($payment, 'extensions');
+        $extensions = $this->readAttribute($gateway, 'extensions');
         $this->assertAttributeNotEmpty('extensions', $extensions);
     }
 
     /**
      * @test
      */
-    public function shouldAllowCreatePaymentWithCustomApi()
+    public function shouldAllowCreateGatewayWithCustomApi()
     {
-        $factory = new PaymentFactory();
+        $factory = new GatewayFactory();
 
-        $payment = $factory->create(array(
+        $gateway = $factory->create(array(
             'payum.api' => new \stdClass(),
         ));
 
-        $this->assertInstanceOf('Payum\Core\Payment', $payment);
+        $this->assertInstanceOf('Payum\Core\Gateway', $gateway);
 
-        $this->assertAttributeNotEmpty('apis', $payment);
+        $this->assertAttributeNotEmpty('apis', $gateway);
     }
 
     /**
      * @test
      */
-    public function shouldAllowCreatePaymentConfig()
+    public function shouldAllowCreateGatewayConfig()
     {
-        $factory = new PaymentFactory();
+        $factory = new GatewayFactory();
 
         $config = $factory->createConfig();
 
@@ -93,9 +93,9 @@ class PaymentFactoryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldAddDefaultConfigPassedInConstructorWhileCreatingPaymentConfig()
+    public function shouldAddDefaultConfigPassedInConstructorWhileCreatingGatewayConfig()
     {
-        $factory = new PaymentFactory(array(
+        $factory = new GatewayFactory(array(
             'foo' => 'fooVal',
             'bar' => 'barVal',
         ));
@@ -119,18 +119,18 @@ class PaymentFactoryTest extends \PHPUnit_Framework_TestCase
         $firstAction = $this->getMock('Payum\Core\Action\ActionInterface');
         $secondAction = $this->getMock('Payum\Core\Action\ActionInterface');
 
-        $factory = new PaymentFactory();
+        $factory = new GatewayFactory();
 
-        $payment = $factory->create(array(
+        $gateway = $factory->create(array(
             'payum.action.foo' => $firstAction,
             'payum.action.bar' => $secondAction,
         ));
 
-        $actions = $this->readAttribute($payment, 'actions');
+        $actions = $this->readAttribute($gateway, 'actions');
         $this->assertSame($firstAction, $actions[0]);
         $this->assertSame($secondAction, $actions[1]);
 
-        $payment = $factory->create(array(
+        $gateway = $factory->create(array(
             'payum.action.foo' => $firstAction,
             'payum.action.bar' => $secondAction,
             'payum.prepend_actions' => array(
@@ -138,7 +138,7 @@ class PaymentFactoryTest extends \PHPUnit_Framework_TestCase
             )
         ));
 
-        $actions = $this->readAttribute($payment, 'actions');
+        $actions = $this->readAttribute($gateway, 'actions');
         $this->assertSame($secondAction, $actions[0]);
         $this->assertSame($firstAction, $actions[1]);
     }
@@ -151,18 +151,18 @@ class PaymentFactoryTest extends \PHPUnit_Framework_TestCase
         $firstApi = new \stdClass();
         $secondApi = new \stdClass();
 
-        $factory = new PaymentFactory();
+        $factory = new GatewayFactory();
 
-        $payment = $factory->create(array(
+        $gateway = $factory->create(array(
             'payum.api.foo' => $firstApi,
             'payum.api.bar' => $secondApi,
         ));
 
-        $apis = $this->readAttribute($payment, 'apis');
+        $apis = $this->readAttribute($gateway, 'apis');
         $this->assertSame($firstApi, $apis[0]);
         $this->assertSame($secondApi, $apis[1]);
 
-        $payment = $factory->create(array(
+        $gateway = $factory->create(array(
             'payum.api.foo' => $firstApi,
             'payum.api.bar' => $secondApi,
             'payum.prepend_apis' => array(
@@ -170,7 +170,7 @@ class PaymentFactoryTest extends \PHPUnit_Framework_TestCase
             )
         ));
 
-        $apis = $this->readAttribute($payment, 'apis');
+        $apis = $this->readAttribute($gateway, 'apis');
         $this->assertSame($secondApi, $apis[0]);
         $this->assertSame($firstApi, $apis[1]);
     }
@@ -183,18 +183,18 @@ class PaymentFactoryTest extends \PHPUnit_Framework_TestCase
         $firstExtension = $this->getMock('Payum\Core\Extension\ExtensionInterface');
         $secondExtension = $this->getMock('Payum\Core\Extension\ExtensionInterface');
 
-        $factory = new PaymentFactory();
+        $factory = new GatewayFactory();
 
-        $payment = $factory->create(array(
+        $gateway = $factory->create(array(
             'payum.extension.foo' => $firstExtension,
             'payum.extension.bar' => $secondExtension,
         ));
 
-        $extensions = $this->readAttribute($this->readAttribute($payment, 'extensions'), 'extensions');
+        $extensions = $this->readAttribute($this->readAttribute($gateway, 'extensions'), 'extensions');
         $this->assertSame($firstExtension, $extensions[0]);
         $this->assertSame($secondExtension, $extensions[1]);
 
-        $payment = $factory->create(array(
+        $gateway = $factory->create(array(
             'payum.extension.foo' => $firstExtension,
             'payum.extension.bar' => $secondExtension,
             'payum.prepend_extensions' => array(
@@ -202,7 +202,7 @@ class PaymentFactoryTest extends \PHPUnit_Framework_TestCase
             )
         ));
 
-        $extensions = $this->readAttribute($this->readAttribute($payment, 'extensions'), 'extensions');
+        $extensions = $this->readAttribute($this->readAttribute($gateway, 'extensions'), 'extensions');
         $this->assertSame($secondExtension, $extensions[0]);
         $this->assertSame($firstExtension, $extensions[1]);
     }

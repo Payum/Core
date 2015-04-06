@@ -4,7 +4,7 @@ namespace Payum\Core\Bridge\Symfony\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class PaymentFactoriesChoiceType extends AbstractType
+class GatewayFactoriesChoiceType extends AbstractType
 {
     /**
      * @var string[]
@@ -42,6 +42,6 @@ class PaymentFactoriesChoiceType extends AbstractType
      */
     public function getName()
     {
-        return 'payum_payment_factories_choice';
+        return 'payum_gateway_factories_choice';
     }
 }
