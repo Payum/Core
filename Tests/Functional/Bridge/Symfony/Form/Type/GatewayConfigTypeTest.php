@@ -1,14 +1,14 @@
 <?php
 namespace Payum\Core\Tests\Functional\Bridge\Symfony\Form\Type;
 
-use Payum\Bundle\PayumBundle\DependencyInjection\Factory\Payment\PaymentFactoryInterface;
-use Payum\Core\Bridge\Symfony\Form\Type\PaymentConfigType;
-use Payum\Core\Bridge\Symfony\Form\Type\PaymentFactoriesChoiceType;
-use Payum\Core\Model\PaymentConfig;
+use Payum\Bundle\PayumBundle\DependencyInjection\Factory\Gateway\GatewayFactoryInterface;
+use Payum\Core\Bridge\Symfony\Form\Type\GatewayConfigType;
+use Payum\Core\Bridge\Symfony\Form\Type\GatewayFactoriesChoiceType;
+use Payum\Core\Model\GatewayConfig;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\Forms;
 
-class PaymentConfigTypeTest extends \PHPUnit_Framework_TestCase
+class GatewayConfigTypeTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var  FormFactory
@@ -16,27 +16,27 @@ class PaymentConfigTypeTest extends \PHPUnit_Framework_TestCase
     protected $formFactory;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|PaymentFactoryInterface
+     * @var \PHPUnit_Framework_MockObject_MockObject|GatewayFactoryInterface
      */
-    protected $fooPaymentFactoryMock;
+    protected $fooGatewayFactoryMock;
 
     protected function setUp()
     {
-        $this->fooPaymentFactoryMock = $this->getMock('Payum\Core\PaymentFactoryInterface');
+        $this->fooGatewayFactoryMock = $this->getMock('Payum\Core\GatewayFactoryInterface');
 
-        $registry = $this->getMock('Payum\Core\Registry\PaymentFactoryRegistryInterface');
+        $registry = $this->getMock('Payum\Core\Registry\GatewayFactoryRegistryInterface');
         $registry
             ->expects($this->any())
-            ->method('getPaymentFactory')
+            ->method('getGatewayFactory')
             ->with('foo')
-            ->willReturn($this->fooPaymentFactoryMock)
+            ->willReturn($this->fooGatewayFactoryMock)
         ;
 
         $this->formFactory = Forms::createFormFactoryBuilder()
-            ->addType(new PaymentFactoriesChoiceType(array(
+            ->addType(new GatewayFactoriesChoiceType(array(
                 'foo' => 'Foo Factory',
             )))
-            ->addType(new PaymentConfigType($registry))
+            ->addType(new GatewayConfigType($registry))
             ->getFormFactory()
         ;
     }
@@ -46,7 +46,7 @@ class PaymentConfigTypeTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldBeConstructedByFormFactory()
     {
-        $form = $this->formFactory->create('payum_payment_config');
+        $form = $this->formFactory->create('payum_gateway_config');
 
         $this->assertInstanceOf('Symfony\Component\Form\Form', $form);
         $this->assertInstanceOf('Symfony\Component\Form\FormView', $form->createView());
@@ -57,9 +57,9 @@ class PaymentConfigTypeTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldAddDefaultFieldsIfFactoryNameChosen()
     {
-        $form = $this->formFactory->create('payum_payment_config');
+        $form = $this->formFactory->create('payum_gateway_config');
 
-        $this->assertTrue($form->has('paymentName'));
+        $this->assertTrue($form->has('gatewayName'));
         $this->assertTrue($form->has('factoryName'));
         $this->assertFalse($form->has('config'));
     }
@@ -69,7 +69,7 @@ class PaymentConfigTypeTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldMarkFormInvalidAndAddConfigFields()
     {
-        $this->fooPaymentFactoryMock
+        $this->fooGatewayFactoryMock
             ->expects($this->once())
             ->method('createConfig')
             ->with(array())
@@ -83,10 +83,10 @@ class PaymentConfigTypeTest extends \PHPUnit_Framework_TestCase
             ))
         ;
 
-        $form = $this->formFactory->create('payum_payment_config');
+        $form = $this->formFactory->create('payum_gateway_config');
 
         $form->submit(array(
-            'paymentName' => 'foo',
+            'gatewayName' => 'foo',
             'factoryName' => 'foo',
         ));
 
@@ -106,9 +106,9 @@ class PaymentConfigTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldSubmitWholePaymentConfig()
+    public function shouldSubmitWholeGatewayConfig()
     {
-        $this->fooPaymentFactoryMock
+        $this->fooGatewayFactoryMock
             ->expects($this->once())
             ->method('createConfig')
             ->with(array())
@@ -122,10 +122,10 @@ class PaymentConfigTypeTest extends \PHPUnit_Framework_TestCase
             ))
         ;
 
-        $form = $this->formFactory->create('payum_payment_config');
+        $form = $this->formFactory->create('payum_gateway_config');
 
         $form->submit(array(
-            'paymentName' => 'foo',
+            'gatewayName' => 'foo',
             'factoryName' => 'foo',
             'config' => array(
                 'username' => 'submitName',
@@ -150,9 +150,9 @@ class PaymentConfigTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldAddConfigFieldsIfPaymentConfigHasFactorySet()
+    public function shouldAddConfigFieldsIfGatewayConfigHasFactorySet()
     {
-        $this->fooPaymentFactoryMock
+        $this->fooGatewayFactoryMock
             ->expects($this->once())
             ->method('createConfig')
             ->with(array())
@@ -166,16 +166,16 @@ class PaymentConfigTypeTest extends \PHPUnit_Framework_TestCase
             ))
         ;
 
-        $paymentConfig = new PaymentConfig();
-        $paymentConfig->setFactoryName('foo');
-        $paymentConfig->setPaymentName('theName');
-        $paymentConfig->setConfig(array(
+        $gatewayConfig = new GatewayConfig();
+        $gatewayConfig->setFactoryName('foo');
+        $gatewayConfig->setGatewayName('theName');
+        $gatewayConfig->setConfig(array(
             'username' => 'modelName',
             'password' => 'modelPass',
             'sandbox' => false,
         ));
 
-        $form = $this->formFactory->create('payum_payment_config', $paymentConfig);
+        $form = $this->formFactory->create('payum_gateway_config', $gatewayConfig);
 
 
         $this->assertTrue($form->has('config'));
