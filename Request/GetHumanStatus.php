@@ -19,7 +19,7 @@ class GetHumanStatus extends BaseGetStatus
 
     const STATUS_PENDING = 'pending';
 
-    const STATUS_CANCELED = 'canceled';
+    const STATUS_CANCELLED = 'cancelled';
 
     const STATUS_NEW = 'new';
 
@@ -106,17 +106,17 @@ class GetHumanStatus extends BaseGetStatus
     /**
      * {@inheritDoc}
      */
-    public function markCanceled()
+    public function markCancelled()
     {
-        $this->status = static::STATUS_CANCELED;
+        $this->status = static::STATUS_CANCELLED;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function isCanceled()
+    public function isCancelled()
     {
-        return $this->isCurrentStatusEqualTo(static::STATUS_CANCELED);
+        return $this->isCurrentStatusEqualTo(static::STATUS_CANCELLED);
     }
 
     /**
