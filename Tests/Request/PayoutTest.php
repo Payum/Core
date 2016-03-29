@@ -1,17 +1,17 @@
 <?php
 namespace Payum\Core\Tests\Request;
 
-use Payum\Core\Request\Cancel;
 use Payum\Core\Request\Generic;
+use Payum\Core\Request\Payout;
 
-class CancelTest extends \PHPUnit_Framework_TestCase
+class PayoutTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
      */
     public function shouldBeSubClassOfGeneric()
     {
-        $rc = new \ReflectionClass(Cancel::class);
+        $rc = new \ReflectionClass(Payout::class);
 
         $this->assertTrue($rc->isSubclassOf(Generic::class));
     }
@@ -21,6 +21,6 @@ class CancelTest extends \PHPUnit_Framework_TestCase
      */
     public function couldBeConstructedWithModel()
     {
-        new Cancel(new \stdClass());
+        new Payout(new \stdClass());
     }
 }
