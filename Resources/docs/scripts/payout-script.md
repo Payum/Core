@@ -1,10 +1,14 @@
-# Refund script.
+# Payout script.
+
+This is the script which does all the job related to payout payments.
+
+## Secured script.
 
 ```php
 <?php
-//refund.php
+//payout.php
 
-use Payum\Core\Request\Refund;
+use Payum\Core\Request\Payout;
 use Payum\Core\Reply\HttpRedirect;
 
 include 'config.php';
@@ -13,18 +17,13 @@ $token = $payum->getHttpRequestVerifier()->verify($_REQUEST);
 $gateway = $payum->getGateway($token->getGatewayName());
 
 try {
-    $gateway->execute(new Refund($token));
+    $gateway->execute(new Payout($token));
 
     if (false == isset($_REQUEST['noinvalidate'])) {
         $payum->getHttpRequestVerifier()->invalidate($token);
     }
 
-    if ($token->getAfterUrl()) {
-        header("Location: ".$token->getAfterUrl());
-    } else {
-        http_response_code(204);
-        echo 'OK';
-    }
+    header("Location: ".$token->getAfterUrl());
 } catch (HttpResponse $reply) {
     foreach ($reply->getHeaders() as $name => $value) {
         header("$name: $value");
@@ -39,6 +38,19 @@ try {
 }
 ```
 
+_**Note**: If you've got the "Unsupported reply" you have to add an if condition for that reply. Inside the If statement you have to convert the reply to http response._
+
+This is how you can create a payout url.
+
+```php
+<?php
+
+include config.php;
+
+$token = $payum->getTokenFactory()->createPayoutToken($gatewayName, $details, 'afterPayoutUrl');
+
+header("Location: ".$token->getTargetUrl());
+```
+
 Back to [scripts](index.md).
 Back to [index](../index.md).
-
