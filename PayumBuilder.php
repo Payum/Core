@@ -527,7 +527,7 @@ class PayumBuilder
             $dynamicRegistry = new DynamicRegistry($this->gatewayConfigStorage, $registry);
             $dynamicRegistry->setBackwardCompatibility(false);
 
-            $registry = new FallbackRegistry($dynamicRegistry, $registry);
+            $registry = new FallbackRegistry($registry, $dynamicRegistry);
         }
 
         if ($this->mainRegistry) {
